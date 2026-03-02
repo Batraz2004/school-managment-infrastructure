@@ -20,7 +20,7 @@ services:
             context: .
             dockerfile: ./php/Dockerfile
         volumes:
-            - ./auto-service:/var/www/school-manage
+            - ./school-manage:/var/www/school-manage
         #   - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini ты это уже делаешь в dockerfile
         depends_on:
             - db
@@ -40,7 +40,6 @@ services:
             - ./db:/var/lib/mysql
         ports:
             - 3318:3306
-        command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
         networks:
             - school-manage-internal
     
