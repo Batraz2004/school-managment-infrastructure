@@ -1,0 +1,61 @@
+version: "3.8"
+services:
+    nginx:
+        container_name: school-manage_nginx
+        image: nginx:latest
+        ports:
+            - "8184:80"
+        volumes:
+            - ./school-manage/:/var/www/school-manage
+            - ./nginx/conf.d/:/etc/nginx/conf.d/
+            - ./logs/nginx:/var/log/nginx
+        depends_on:
+            - php
+        networks:
+            - school-manage-internal
+    php:
+        # image: php:8.4-fpm
+        container_name: school-manage_php
+        build:
+            context: .
+            dockerfile: ./php/Dockerfile
+        volumes:
+            - ./auto-service:/var/www/school-manage
+        #   - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini ты это уже делаешь в dockerfile
+        depends_on:
+            - db
+        networks:
+            - school-manage-internal
+        
+    db:
+        container_name: school-manage_db
+        image: mysql:latest
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: school-manage
+            MYSQL_USER: adminer
+            MYSQL_PASSWORD: adminer_dev%100
+        volumes:
+            - ./db:/var/lib/mysql
+        ports:
+            - 3318:3306
+        command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+        networks:
+            - school-manage-internal
+    
+    phpmyadmin:
+        container_name: school-manage_phpmyadmin
+        image: phpmyadmin/phpmyadmin:latest
+        restart: always
+        depends_on:
+            - db
+        environment:
+            - PMA_HOST=db
+            - MYSQL_ROOT_PASSWORD=root
+        ports:
+          - 8185:80
+
+networks:
+    school-manage-internal:
+        driver: bridge
