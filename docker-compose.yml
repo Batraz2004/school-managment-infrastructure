@@ -50,10 +50,12 @@ services:
         depends_on:
             - db
         environment:
-            - PMA_HOST=db
+            - PMA_HOST=school-manage_db
             - MYSQL_ROOT_PASSWORD=root
         ports:
           - 8185:80
+        networks:
+            - school-manage-internal
 
 networks:
     school-manage-internal:
