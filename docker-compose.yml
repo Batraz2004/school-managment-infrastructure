@@ -3,6 +3,7 @@ services:
     nginx:
         container_name: school-manage_nginx
         image: nginx:latest
+        restart: always
         ports:
             - "8184:80"
         volumes:
@@ -16,6 +17,7 @@ services:
     php:
         # image: php:8.4-fpm
         container_name: school-manage_php
+        restart: always
         build:
             context: .
             dockerfile: ./php/Dockerfile

@@ -1,4 +1,6 @@
 school-manage/
 school-manage/*
 logs/*
+logs
 db/*
+
